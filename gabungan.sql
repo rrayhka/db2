@@ -124,108 +124,94 @@ create table if not exists hubunganKeluarga(
     nameHubungan Varchar(20)
 );
 
+-- alter table kabupaten
+ALTER TABLE kabupaten
+ADD COLUMN idProvinsi CHAR(2),
+ADD CONSTRAINT FK_1PROV_MKAB FOREIGN KEY (idProvinsi) REFERENCES provinsi (idProvinsi) ON DELETE RESTRICT ON UPDATE CASCADE;
 
--- kode di bawah ini untuk menghubungkan semua table wilayah dengan relasi
-alter table kabupaten
-add idProvinsi Char(2),
-add constraint FK_1PROV_MKAB foreign key (idProvinsi) references provinsi (idProvinsi) on delete restrict on update cascade;
+-- alter table kecamatan
+ALTER TABLE kecamatan
+ADD COLUMN idProvinsi CHAR(2),
+ADD COLUMN idKabupaten CHAR(4),
+ADD CONSTRAINT FK_1KAB_MKEC FOREIGN KEY (idKabupaten) REFERENCES kabupaten (idKabupaten) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1PROV_MKEC FOREIGN KEY (idProvinsi) REFERENCES provinsi (idProvinsi) ON DELETE RESTRICT ON UPDATE CASCADE;
 
-alter table kecamatan
-add idProvinsi Char(2),
-add idKabupaten Char(4),
-add constraint FK_1KAB_MKEC foreign key (idKabupaten) references kabupaten (idKabupaten) on delete restrict on update cascade,
-add constraint FK_1PROV_MKEC foreign key (idProvinsi) references provinsi (idProvinsi) on delete restrict on update cascade;
+-- alter table kelurahan
+ALTER TABLE kelurahan
+ADD COLUMN idProvinsi CHAR(2),
+ADD COLUMN idKabupaten CHAR(4),
+ADD COLUMN idKecamatan CHAR(6),
+ADD CONSTRAINT FK_1PROV_MKEL FOREIGN KEY (idProvinsi) REFERENCES provinsi (idProvinsi) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1KAB_MKEL FOREIGN KEY (idKabupaten) REFERENCES kabupaten (idKabupaten) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1KEC_MKEL FOREIGN KEY (idKecamatan) REFERENCES kecamatan (idKecamatan) ON DELETE RESTRICT ON UPDATE CASCADE;
 
-alter table kelurahan
-add idProvinsi Char(2),
-add idKabupaten Char(4),
-add idKecamatan Char(6),
-add constraint FK_1PROV_MKEL foreign key (idProvinsi) references provinsi (idProvinsi) on delete restrict on update cascade,
-add constraint FK_1KAB_MKEL foreign key (idKabupaten) references kabupaten (idKabupaten) on delete restrict on update cascade,
-add constraint FK_1KEC_MKEL foreign key (idKecamatan) references kecamatan (idKecamatan) on delete restrict on update cascade;
-
-alter table dusun
-add idProvinsi Char(2),
-add idKabupaten Char(4),
-add idKecamatan Char(6),
-add idKelurahan Char(8),
-add constraint FK_1PROV_MDUS foreign key (idProvinsi) references provinsi (idProvinsi) on delete restrict on update cascade,
-add constraint FK_1KAB_MDUS foreign key (idKabupaten) references kabupaten (idKabupaten) on delete restrict on update cascade,
-add constraint FK_1KEC_MDUS foreign key (idKecamatan) references kecamatan (idKecamatan) on delete restrict on update cascade,
-add constraint FK_1KEL_MDUS foreign key (idKelurahan) references kelurahan (idKelurahan) on delete restrict on update cascade;
-
--- alter table jabatan 
-alter table jabatan 
-add NIP Char(18),
-add constraint FK_1NIP_MJAB foreign key (NIP) references pejabat (NIP) on delete restrict on update cascade;
-
--- alter table ktp 
-alter table ktp
-add NIK Char(16),
-add constraint FK_1NIK_1KTP foreign key (NIK) references anggotaKeluarga (NIK) on delete restrict on update restrict;
-
--- alter table akta
-alter table akta 
-add NIK Char(16),
-add NIP Char(18),
-add ang_NIK Char(16),
-add constraint FK_1NIP_MAKTA foreign key (NIP) references pejabat (NIP) on delete restrict on update cascade,
-add constraint FK_1NIK_MAKTA foreign key (ang_NIK) references anggotaKeluarga (ang_NIK) on delete restrict on update restrict,
-add constraint FK_1NIK_MAKTA foreign key (NIK) references anggotaKeluarga (NIK) on delete restrict on update restrict,
-
--- Alter table kartuKeluarga
-ALTER TABLE kartuKeluarga
-ADD COLUMN NIP2 CHAR(18),
+-- alter table dusun
+ALTER TABLE dusun
 ADD COLUMN idProvinsi CHAR(2),
 ADD COLUMN idKabupaten CHAR(4),
 ADD COLUMN idKecamatan CHAR(6),
 ADD COLUMN idKelurahan CHAR(8),
-ADD COLUMN idDusun CHAR(10),
-ADD COLUMN idHubungan CHAR(2),
-ADD CONSTRAINT FK_1NIP_MKK FOREIGN KEY (NIP2) REFERENCES pejabat (NIP) ON DELETE RESTRICT ON UPDATE CASCADE,
-ADD CONSTRAINT FK_1PROV_MKK FOREIGN KEY (idProvinsi) REFERENCES provinsi (idProvinsi) ON DELETE RESTRICT ON UPDATE CASCADE,
-ADD CONSTRAINT FK_1KAB_MKK FOREIGN KEY (idKabupaten) REFERENCES kabupaten (idKabupaten) ON DELETE RESTRICT ON UPDATE CASCADE,
-ADD CONSTRAINT FK_1KEC_MKK FOREIGN KEY (idKecamatan) REFERENCES kecamatan (idKecamatan) ON DELETE RESTRICT ON UPDATE CASCADE,
-ADD CONSTRAINT FK_1KEL_MKK FOREIGN KEY (idKelurahan) REFERENCES kelurahan (idKelurahan) ON DELETE RESTRICT ON UPDATE CASCADE,
-ADD CONSTRAINT FK_1DUS_MKK FOREIGN KEY (idDusun) REFERENCES dusun (idDusun) ON DELETE RESTRICT ON UPDATE CASCADE,
-ADD CONSTRAINT FK_1HUB_MKK FOREIGN KEY (idHubungan) REFERENCES hubunganKeluarga (idHubungan) ON DELETE RESTRICT ON UPDATE CASCADE;
+ADD CONSTRAINT FK_1PROV_MDUS FOREIGN KEY (idProvinsi) REFERENCES provinsi (idProvinsi) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1KAB_MDUS FOREIGN KEY (idKabupaten) REFERENCES kabupaten (idKabupaten) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1KEC_MDUS FOREIGN KEY (idKecamatan) REFERENCES kecamatan (idKecamatan) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1KEL_MDUS FOREIGN KEY (idKelurahan) REFERENCES kelurahan (idKelurahan) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- alter table jabatan
+ALTER TABLE jabatan
+ADD COLUMN NIP CHAR(18),
+ADD CONSTRAINT FK_1NIP_MJAB FOREIGN KEY (NIP) REFERENCES pejabat (NIP) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- alter table ktp
+ALTER TABLE ktp
+ADD COLUMN NIK CHAR(16),
+ADD CONSTRAINT FK_1NIK_1KTP FOREIGN KEY (NIK) REFERENCES anggotaKeluarga (NIK) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- alter table akta
+ALTER TABLE akta
+ADD COLUMN NIK CHAR(16),
+ADD COLUMN NIP CHAR(18),
+ADD COLUMN ang_NIK CHAR(16),
+ADD CONSTRAINT FK_1NIP_MAKTA FOREIGN KEY (NIP) REFERENCES pejabat (NIP) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1NIK_MAKTA FOREIGN KEY (ang_NIK) REFERENCES anggotaKeluarga (ang_NIK) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_2NIK_MAKTA FOREIGN KEY (NIK) REFERENCES anggotaKeluarga (NIK) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- alter table kartuKeluarga
+ALTER TABLE kartuKeluarga
+ADD COLUMN NIP2 CHAR(18),
+ADD CONSTRAINT FK_1NIP_MKK FOREIGN KEY (NIP2) REFERENCES pejabat (NIP) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- alter table anggotaKeluarga
-alter table anggotaKeluarga
-add noKTP Char(16),
-add idBlood Char(2),
-add idPendidikan Char(1),
-add noKitas Char(11),
-add idCitizenship Char(1),
-add idGender Char(1),
-add idPekerjaan Char(2),
-add idAgama Char(1),
-add idMaried Char(1),
-add idDusun Char(10),
-add idKelurahan Char(8),
-add idKecamatan Char(6),
-add idKabupaten Char(4),
-add idProvinsi Char(2),
-add idHubungan Char(2),
-add noPaspor Char(9),
-add noKK Char(16),
-add dusKabupaten Char(4),
-add kabProvinsi Char(2),
-add constraint FK_1KTP_1AK foreign key (noKTP) references ktp (noKTP) on delete restrict on update restrict,
-add constraint FK_AK_1BLOOD foreign key (idBlood) references blood (idBlood) on delete restrict on update restrict,
-add constraint FK_1AK_MPEND foreign key (idPendidikan) references pendidikan (idPendidikan) on delete restrict on update restrict,
-add constraint FK_1KITAS_1AK foreign key (noKitas) references kitas (noKitas) on delete restrict on update restrict,
-add constraint FK_1AK_1CITIZEN foreign key (idCitizenship) references citizenship (idCitizenship) on delete restrict on update restrict,
-add constraint FK_1AK_1GENDER foreign key (idGender) references gender (idGender) on delete restrict on update restrict,
-add constraint FK_1AK_1PEKERJAAN foreign key (idPekerjaan) references pekerjaan (idPekerjaan) on delete restrict on update restrict,
-add constraint FK_1AK_1AGAMA foreign key (idAgama) references agama (idAgama) on delete restrict on update restrict,
-add constraint FK_1AK_1MARIED foreign key (idMaried) references maried (idMaried) on delete restrict on update restrict,
-add constraint FK_1AK_1DUSUN foreign key (idDusun, idKelurahan, idKecamatan, idKabupaten, idProvinsi, dusKabupaten) references dusun (idDusun, idKelurahan, idKecamatan, idKabupaten, idProvinsi) on delete restrict on update cascade,
--- add constraint FK_1AK_1KEL foreign key (idKelurahan) references kelurahan (idKelurahan) on delete restrict on update cascade
--- add constraint FK_1AK_1KEC foreign key (idKecamatan) references kecamatan (idKecamatan) on delete restrict on update cascade
--- add constraint FK_1AK_1KAB foreign key (idKabupaten) references kabupaten (idKabupaten) on delete restrict on update cascade
--- add constraint FK_1AK_1PROV foreign key (idProvinsi) references provinsi (idProvinsi) on delete restrict on update cascade
-add constraint FK_1AK_1KabProv foreign key (idProvinsi, kabProvinsi) references kabupaten (idProvinsi, idKabupaten) on delete restrict on update cascade,
-add constraint FK_1AK_1HUBUNGAN foreign key (idHubungan) references hubunganKeluarga (idHubungan) on delete restrict on update restrict,
-add constraint FK_1PASPOR_1AK foreign key (noPaspor) references paspor (noPaspor) on delete restrict on update restrict,
-add constraint FK_1KK_1AK foreign key (noKK) references kartuKeluarga (noKK) on delete restrict on update restrict;
+ALTER TABLE anggotaKeluarga
+ADD COLUMN noKTP CHAR(16),
+ADD COLUMN idBlood CHAR(2),
+ADD COLUMN idPendidikan CHAR(1),
+ADD COLUMN noKitas CHAR(11),
+ADD COLUMN idCitizenship CHAR(1),
+ADD COLUMN idGender CHAR(1),
+ADD COLUMN idPekerjaan CHAR(2),
+ADD COLUMN idAgama CHAR(1),
+ADD COLUMN idMaried CHAR(1),
+ADD COLUMN idDusun CHAR(10),
+ADD COLUMN idKelurahan CHAR(8),
+ADD COLUMN idKecamatan CHAR(6),
+ADD COLUMN idKabupaten CHAR(4),
+ADD COLUMN idProvinsi CHAR(2),
+ADD COLUMN idHubungan CHAR(2),
+ADD COLUMN noPaspor CHAR(9),
+ADD COLUMN noKK CHAR(16),
+ADD COLUMN dusKabupaten CHAR(4),
+ADD COLUMN kabProvinsi CHAR(2),
+ADD CONSTRAINT FK_1KTP_1AK FOREIGN KEY (noKTP) REFERENCES ktp (noKTP) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_AK_1BLOOD FOREIGN KEY (idBlood) REFERENCES blood (idBlood) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1AK_MPEND FOREIGN KEY (idPendidikan) REFERENCES pendidikan (idPendidikan) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1KITAS_1AK FOREIGN KEY (noKitas) REFERENCES kitas (noKitas) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1AK_1CITIZEN FOREIGN KEY (idCitizenship) REFERENCES citizenship (idCitizenship) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1AK_1GENDER FOREIGN KEY (idGender) REFERENCES gender (idGender) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1AK_1PEKERJAAN FOREIGN KEY (idPekerjaan) REFERENCES pekerjaan (idPekerjaan) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1AK_1AGAMA FOREIGN KEY (idAgama) REFERENCES agama (idAgama) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1AK_1MARIED FOREIGN KEY (idMaried) REFERENCES maried (idMaried) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1AK_1DUSUN FOREIGN KEY (idDusun, idKelurahan, idKecamatan, idKabupaten, idProvinsi, dusKabupaten) REFERENCES dusun (idDusun, idKelurahan, idKecamatan, idKabupaten, idProvinsi) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1AK_1KabProv FOREIGN KEY (idProvinsi, kabProvinsi) REFERENCES kabupaten (idProvinsi, idKabupaten) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1AK_1HUBUNGAN FOREIGN KEY (idHubungan) REFERENCES hubunganKeluarga (idHubungan) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1PASPOR_1AK FOREIGN KEY (noPaspor) REFERENCES paspor (noPaspor) ON DELETE RESTRICT ON UPDATE CASCADE,
+ADD CONSTRAINT FK_1KK_1AK FOREIGN KEY (noKK) REFERENCES kartuKeluarga (noKK) ON DELETE RESTRICT ON UPDATE CASCADE;
